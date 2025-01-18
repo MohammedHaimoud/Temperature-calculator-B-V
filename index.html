@@ -1,9 +1,9 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B-V Value to Temperature Calculator</title>
+    <title>COSMAN Temperature Star Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styles */
@@ -155,15 +155,117 @@
         .social-links a:hover {
             color: #ffcc00;
         }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .term {
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .sidebar .term:hover {
+            background-color: #ffcc00;
+            color: black;
+        }
+
+        .definition {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            width: 60%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .definition.active {
+            display: block;
+        }
+
     </style>
 </head>
 <body>
+
+    <!-- Sidebar with Terms -->
+    <div class="sidebar">
+        <div class="term" onclick="showDefinition('bv')">B-V Index</div>
+        <div class="term" onclick="showDefinition('photometry')">Photometry</div>
+        <div class="term" onclick="showDefinition('spectral')">Spectral Type</div>
+        <div class="term" onclick="showDefinition('variable')">Variable Stars</div>
+        <div class="term" onclick="showDefinition('spectroscopy')">Spectroscopy</div>
+        <div class="term" onclick="showDefinition('luminosity')">Luminosity</div>
+        <div class="term" onclick="showDefinition('parallax')">Stellar Parallax</div>
+        <div class="term" onclick="showDefinition('exoplanet')">Exoplanets</div>
+    </div>
+
+    <!-- Definition Pop-up -->
+    <div id="definitionBv" class="definition">
+        <h3>B-V Index</h3>
+        <p>The B-V index is a color index that measures the difference between the brightness of a star in the blue (B) and visual (V) bands. It is used to classify stars and estimate their surface temperature.</p>
+    </div>
+
+    <div id="definitionPhotometry" class="definition">
+        <h3>Photometry</h3>
+        <p>Photometry is the science of measuring the flux or intensity of light emitted by celestial objects, typically stars, galaxies, and other astronomical objects.</p>
+    </div>
+
+    <div id="definitionSpectral" class="definition">
+        <h3>Spectral Type</h3>
+        <p>Spectral type is a classification system that categorizes stars based on their temperature and spectral characteristics. The main types are O, B, A, F, G, K, and M, ranging from hot to cool stars.</p>
+    </div>
+
+    <div id="definitionVariable" class="definition">
+        <h3>Variable Stars</h3>
+        <p>Variable stars are stars whose brightness changes over time. This can occur due to intrinsic factors like pulsation or extrinsic factors like eclipses by another object.</p>
+    </div>
+
+    <div id="definitionSpectroscopy" class="definition">
+        <h3>Spectroscopy</h3>
+        <p>Spectroscopy is the study of the interaction of light with matter. In astronomy, it is used to analyze the light from stars and galaxies to determine their composition, temperature, distance, and more.</p>
+    </div>
+
+    <div id="definitionLuminosity" class="definition">
+        <h3>Luminosity</h3>
+        <p>Luminosity refers to the total amount of energy a star emits per second. It is often used to measure the intrinsic brightness of stars and other astronomical objects.</p>
+    </div>
+
+    <div id="definitionParallax" class="definition">
+        <h3>Stellar Parallax</h3>
+        <p>Stellar parallax is the apparent shift in the position of a star as observed from Earth due to the Earth's motion around the Sun. It is used to measure the distance to nearby stars.</p>
+    </div>
+
+    <div id="definitionExoplanet" class="definition">
+        <h3>Exoplanets</h3>
+        <p>Exoplanets are planets that orbit stars outside our Solar System. They can vary greatly in size, composition, and distance from their host stars.</p>
+    </div>
 
     <!-- Main Content Area -->
     <div class="main-content">
         <!-- Star Temperature Calculator Section -->
         <div class="container">
-            <h1>B-V Value to Temperature Calculator</h1>
+            <h1>COSMAN Temperature Star Calculator</h1>
             <div class="form-group">
                 <label for="starName">Enter the Star Name:</label>
                 <input type="text" id="starName" placeholder="Star Name">
@@ -192,36 +294,23 @@
 
     <!-- Footer -->
     <footer>
-        <p>Want to connect? Reach out to me on my social media platforms or drop me an email at <a href="mailto:haimoud.mohamed.astro@gmail.com">haimoud.mohamed.astro@gmail.com</a>.</p>
-        <div class="social-links">
-            <a href="https://www.instagram.com/cosman_astro/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@cosmanastro" target="_blank"><i class="fab fa-tiktok"></i></a>
-            <a href="https://mohammedhaimoud.blogspot.com/" target="_blank"><i class="fab fa-blogger"></i></a>
-            <a href="https://www.youtube.com/@COSMAN-HAIMOUD" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.linkedin.com/in/mohammed-haimoud/" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://www.facebook.com/quasarastronomy" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.facebook.com/MohammedHaimoudAstro" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.researchgate.net/profile/Mohammed-Haimoud" target="_blank"><i class="fab fa-researchgate"></i></a>
-        </div>
-    </footer>
- </div>
+        <section>
+            <h2>Contact Me</h2>
+            <p>Want to connect? Reach out to me on my social media platforms or drop me an email at <a href="mailto:haimoud.mohamed.astro@gmail.com">haimoud.mohamed.astro@gmail.com</a>.</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/cosman_astro/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@cosmanastro" target="_blank"><i class="fab fa-tiktok"></i></a>
+                <a href="https://mohammedhaimoud.blogspot.com/" target="_blank"><i class="fab fa-blogger"></i></a>
+                <a href="https://www.youtube.com/@COSMAN-HAIMOUD" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.linkedin.com/in/mohammed-haimoud/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.facebook.com/quasarastronomy" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.facebook.com/MohammedHaimoudAstro" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.researchgate.net/profile/Mohammed-Haimoud" target="_blank"><i class="fab fa-researchgate"></i></a>
+            </div>
         </section>
-    </main>
-    <footer>
         <p>&copy; 2025 Mohammed Haimoud. All rights reserved.</p>
     </footer>
 
-    <div id="interestModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div class="modal-header">
-                <h3 id="modal-title"></h3>
-            </div>
-            <div class="modal-body">
-                <p id="modal-description"></p>
-            </div>
-        </div>
-    </div>
     <script>
         let historyData = [];
 
@@ -290,6 +379,25 @@
             link.download = "star_temperature_history.csv";
             link.click();
         }
+
+        function showDefinition(term) {
+            var definitions = document.querySelectorAll(".definition");
+            definitions.forEach(def => def.classList.remove("active"));
+            var definition = document.getElementById("definition" + capitalize(term));
+            definition.classList.add("active");
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Add event listener to hide definition when clicking anywhere on the page
+        document.addEventListener("click", function(event) {
+            if (!event.target.classList.contains("term")) {
+                var definitions = document.querySelectorAll(".definition");
+                definitions.forEach(def => def.classList.remove("active"));
+            }
+        });
     </script>
 
 </body>
