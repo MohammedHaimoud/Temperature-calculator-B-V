@@ -1,0 +1,296 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-V Value to Temperature Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: space-between;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Add semi-transparent background */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffcc00;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 50px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 5px 10px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border: 2px solid #ffcc00;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            background-color: #ffcc00;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #ffa500;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #ffcc00;
+        }
+
+        /* History Section */
+        .history {
+            margin-top: 30px;
+            color: #fff;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .history ul li {
+            margin-bottom: 10px;
+        }
+
+        /* Footer Styles */
+        footer {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            color: #ffcc00;
+        }
+
+        .social-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-links a {
+            font-size: 36px;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Star Temperature Calculator Section -->
+        <div class="container">
+            <h1>B-V Value to Temperature Calculator</h1>
+            <div class="form-group">
+                <label for="starName">Enter the Star Name:</label>
+                <input type="text" id="starName" placeholder="Star Name">
+            </div>
+            <div class="form-group">
+                <label for="constellation">Enter the Constellation:</label>
+                <input type="text" id="constellation" placeholder="Constellation">
+            </div>
+            <div class="form-group">
+                <label for="bvInput">Enter the B-V value:</label>
+                <input type="number" id="bvInput" placeholder="B-V Value" step="0.01">
+            </div>
+            <div class="form-group">
+                <button onclick="calculateTemperature()">Calculate Temperature</button>
+            </div>
+            <div id="result" class="result"></div>
+            <div id="history" class="history">
+                <h3>Previous Calculations</h3>
+                <ul id="historyList"></ul>
+            </div>
+            <div>
+                <button onclick="downloadHistory()">Download History as Excel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Want to connect? Reach out to me on my social media platforms or drop me an email at <a href="mailto:haimoud.mohamed.astro@gmail.com">haimoud.mohamed.astro@gmail.com</a>.</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/cosman_astro/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@cosmanastro" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://mohammedhaimoud.blogspot.com/" target="_blank"><i class="fab fa-blogger"></i></a>
+            <a href="https://www.youtube.com/@COSMAN-HAIMOUD" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.linkedin.com/in/mohammed-haimoud/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.facebook.com/quasarastronomy" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.facebook.com/MohammedHaimoudAstro" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.researchgate.net/profile/Mohammed-Haimoud" target="_blank"><i class="fab fa-researchgate"></i></a>
+        </div>
+    </footer>
+ </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Mohammed Haimoud. All rights reserved.</p>
+    </footer>
+
+    <div id="interestModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-description"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let historyData = [];
+
+        // Fetch NASA APOD API to set background
+        fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
+            .then(response => response.json())
+            .then(data => {
+                document.body.style.backgroundImage = `url(${data.hdurl})`; // Set HD background image
+            })
+            .catch(error => console.error('Error fetching APOD:', error));
+
+        function calculateTemperature() {
+            var bvValue = parseFloat(document.getElementById("bvInput").value);
+            var starName = document.getElementById("starName").value;
+            var constellation = document.getElementById("constellation").value;
+
+            if (isNaN(bvValue)) {
+                document.getElementById("result").innerText = "Please enter a valid B-V value.";
+                return;
+            }
+
+            // Check if B-V value is between -1 and 6
+            if (bvValue < -1 || bvValue > 6) {
+                document.getElementById("result").innerText = "Invalid B-V value. Please enter a value between -1 and 6.";
+                return;
+            }
+
+            // Apply Ballesteros' formula to calculate temperature
+            var temperature = 4600 * (1 / (0.92 * bvValue + 1.7) + 1 / (0.92 * bvValue + 0.62));
+
+            // Avoid negative temperature and handle edge cases
+            if (temperature <= 0) {
+                document.getElementById("result").innerText = "Invalid temperature result. Please enter a valid B-V value.";
+                return;
+            }
+
+            // Round the temperature to the nearest integer and display it
+            temperature = Math.round(temperature);
+            document.getElementById("result").innerText = `Calculated Star Temperature: ${temperature} K`;
+
+            // Save calculation to history
+            var historyEntry = { starName, constellation, bvValue, temperature };
+            historyData.push(historyEntry);
+            updateHistory();
+        }
+
+        function updateHistory() {
+            var historyList = document.getElementById("historyList");
+            historyList.innerHTML = "";
+            historyData.forEach(entry => {
+                var li = document.createElement("li");
+                li.innerText = `Star: ${entry.starName}, Constellation: ${entry.constellation}, B-V: ${entry.bvValue}, Temp: ${entry.temperature} K`;
+                historyList.appendChild(li);
+            });
+        }
+
+        function downloadHistory() {
+            var csvContent = "Star Name, Constellation, B-V Value, Temperature (K)\n";
+            historyData.forEach(entry => {
+                csvContent += `${entry.starName}, ${entry.constellation}, ${entry.bvValue}, ${entry.temperature}\n`;
+            });
+
+            var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "star_temperature_history.csv";
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
