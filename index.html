@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B-V to Temperature Calculator</title>
+    <title>Star Spectral Type and Distance Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General Styles */
@@ -17,9 +17,8 @@
             flex-direction: column;
             height: 100vh;
             justify-content: space-between;
+            background: url('https://apod.nasa.gov/apod/image/2201/NGC2244_Hubble_960.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
         }
 
         /* Main Content Area */
@@ -29,7 +28,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7); /* Add semi-transparent background */
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
         .container {
@@ -120,6 +119,68 @@
             margin-bottom: 10px;
         }
 
+        /* Sidebar Styles */
+        .sidebar {
+            display: none;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .term {
+            padding: 10px;
+            color: #fff;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+        }
+
+        .term:hover {
+            background-color: #333;
+        }
+
+        /* Definition Pop-up Styles */
+        .definition {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .definition.active {
+            display: block;
+        }
+
+        /* Star Button Styles */
+        .menu-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            color: #ffcc00;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .menu-button:hover {
+            color: #ffa500;
+        }
+
         /* Footer Styles */
         footer {
             padding: 20px;
@@ -156,84 +217,9 @@
             color: #ffcc00;
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #333;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            display: none; /* Hide sidebar by default */
-            flex-direction: column;
-        }
-
-        .sidebar .term {
-            color: #fff;
-            padding: 10px;
-            cursor: pointer;
-            margin: 5px 0;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .sidebar .term:hover {
-            background-color: #ffcc00;
-            color: black;
-        }
-
-        .definition {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            width: 60%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .definition.active {
-            display: block;
-        }
-
-        /* Menu Button Styles */
-        .menu-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #ffcc00;
-            color: black;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            transition: background-color 0.3s ease;
-        }
-
-        .menu-button:hover {
-            background-color: #ffa500;
-        }
-
-        .menu-button i {
-            font-size: 24px;
-        }
     </style>
 </head>
 <body>
-
     <!-- Menu Button -->
     <button class="menu-button" onclick="toggleSidebar()">
         <i class="fas fa-star"></i>
@@ -294,29 +280,40 @@
 
     <!-- Main Content Area -->
     <div class="main-content">
-        <!-- Star Temperature Calculator Section -->
         <div class="container">
-            <h1>B-V to Temperature Calculator</h1>
+            <h1>Star Spectral Type and Distance Calculator</h1>
+
             <div class="form-group">
                 <label for="starName">Enter the Star Name:</label>
                 <input type="text" id="starName" placeholder="Star Name">
             </div>
+
             <div class="form-group">
                 <label for="constellation">Enter the Constellation:</label>
                 <input type="text" id="constellation" placeholder="Constellation">
             </div>
+
             <div class="form-group">
                 <label for="bvInput">Enter the B-V value:</label>
                 <input type="number" id="bvInput" placeholder="B-V Value" step="0.01">
             </div>
+
             <div class="form-group">
-                <button onclick="calculateTemperature()">Calculate Temperature</button>
+                <label for="apparentMag">Enter the Apparent Magnitude (m):</label>
+                <input type="number" id="apparentMag" placeholder="Apparent Magnitude" step="0.01">
             </div>
+
+            <div class="form-group">
+                <button onclick="calculateDistanceAndSpectralType()">Calculate</button>
+            </div>
+
             <div id="result" class="result"></div>
+
             <div id="history" class="history">
                 <h3>Previous Calculations</h3>
                 <ul id="historyList"></ul>
             </div>
+
             <div>
                 <button onclick="downloadHistory()">Download History as Excel</button>
             </div>
@@ -339,75 +336,131 @@
                 <a href="https://www.researchgate.net/profile/Mohammed-Haimoud" target="_blank"><i class="fab fa-researchgate"></i></a>
             </div>
         </section>
-        <p>&copy; 2025 Mohammed Haimoud. All rights reserved.</p>
+        <p>© 2025 Mohammed Haimoud. All rights reserved.</p>
     </footer>
 
     <script>
         let historyData = [];
+        const starData = [
+            {type: 'O5', temp: 54000, mag: -10.0, lum: 846000},
+            {type: 'O6', temp: 45000, mag: -8.8, lum: 275000},
+            {type: 'O7', temp: 43300, mag: -8.6, lum: 220000},
+            {type: 'O8', temp: 40600, mag: -8.2, lum: 150000},
+            {type: 'O9', temp: 37800, mag: -7.7, lum: 95000},
+            {type: 'B0', temp: 29200, mag: -6.0, lum: 20000},
+            {type: 'B1', temp: 23000, mag: -4.4, lum: 4600},
+            {type: 'B2', temp: 21000, mag: -3.8, lum: 2600},
+            {type: 'B3', temp: 17600, mag: -2.6, lum: 900},
+            {type: 'B5', temp: 15200, mag: -1.6, lum: 360},
+            {type: 'B6', temp: 14300, mag: -1.2, lum: 250},
+            {type: 'B7', temp: 13500, mag: -0.84, lum: 175},
+            {type: 'B8', temp: 12300, mag: -0.23, lum: 100},
+            {type: 'B9', temp: 11400, mag: 0.29, lum: 62},
+            {type: 'A0', temp: 9600, mag: 1.4, lum: 22},
+            {type: 'A1', temp: 9330, mag: 1.6, lum: 18},
+            {type: 'A2', temp: 9040, mag: 1.8, lum: 15},
+            {type: 'A3', temp: 8750, mag: 2.1, lum: 12},
+            {type: 'A4', temp: 8480, mag: 2.3, lum: 10},
+            {type: 'A5', temp: 8310, mag: 2.4, lum: 9},
+            {type: 'A7', temp: 7920, mag: 2.7, lum: 6.7},
+            {type: 'F0', temp: 7350, mag: 3.2, lum: 4.3},
+            {type: 'F2', temp: 7050, mag: 3.5, lum: 3.3},
+            {type: 'F3', temp: 6850, mag: 3.7, lum: 2.8},
+            {type: 'F5', temp: 6700, mag: 3.8, lum: 2.4},
+            {type: 'F6', temp: 6550, mag: 4.0, lum: 2.1},
+            {type: 'F7', temp: 6400, mag: 4.1, lum: 1.8},
+            {type: 'F8', temp: 6300, mag: 4.2, lum: 1.7},
+            {type: 'G0', temp: 6050, mag: 4.5, lum: 1.3},
+            {type: 'G1', temp: 5930, mag: 4.6, lum: 1.2},
+            {type: 'G2', temp: 5800, mag: 4.8, lum: 1},
+            {type: 'G5', temp: 5660, mag: 4.9, lum: 0.86},
+            {type: 'G8', temp: 5440, mag: 5.2, lum: 0.68},
+            {type: 'K0', temp: 5240, mag: 5.4, lum: 0.54},
+            {type: 'K1', temp: 5110, mag: 5.6, lum: 0.46},
+            {type: 'K2', temp: 4960, mag: 5.8, lum: 0.38},
+            {type: 'K3', temp: 4800, mag: 6.0, lum: 0.31},
+            {type: 'K4', temp: 4600, mag: 6.3, lum: 0.24},
+            {type: 'K5', temp: 4400, mag: 6.6, lum: 0.19},
+            {type: 'K7', temp: 4000, mag: 7.3, lum: 0.10},
+            {type: 'M0', temp: 3750, mag: 7.7, lum: 0.069},
+            {type: 'M1', temp: 3700, mag: 7.8, lum: 0.064},
+            {type: 'M2', temp: 3600, mag: 7.9, lum: 0.054},
+            {type: 'M3', temp: 3500, mag: 8.1, lum: 0.046},
+            {type: 'M4', temp: 3400, mag: 8.3, lum: 0.038},
+            {type: 'M5', temp: 3200, mag: 8.7, lum: 0.026},
+            {type: 'M6', temp: 3100, mag: 8.9, lum: 0.022},
+            {type: 'M7', temp: 2900, mag: 9.4, lum: 0.014},
+            {type: 'M8', temp: 2700, mag: 9.9, lum: 0.0093},
+            {type: 'L0', temp: 2600, mag: '*', lum: 0.0074},
+            {type: 'L3', temp: 2200, mag: '*', lum: 0.0027},
+            {type: 'L8', temp: 1500, mag: '*', lum: 0.00026},
+            {type: 'T2', temp: 1400, mag: '*', lum: 0.00017},
+            {type: 'T6', temp: 1000, mag: '*', lum: 0.000021},
+            {type: 'T8', temp: 800, mag: '*', lum: 0.0000055}
+        ];
 
-        // Fetch NASA APOD API to set background
-        fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
-            .then(response => response.json())
-            .then(data => {
-                document.body.style.backgroundImage = `url(${data.hdurl})`; // Set HD background image
-            })
-            .catch(error => console.error('Error fetching APOD:', error));
+        function calculateDistanceAndSpectralType() {
+            const bvValue = parseFloat(document.getElementById("bvInput").value);
+            const apparentMag = parseFloat(document.getElementById("apparentMag").value);
+            const starName = document.getElementById("starName").value;
+            const constellation = document.getElementById("constellation").value;
 
-        function calculateTemperature() {
-            var bvValue = parseFloat(document.getElementById("bvInput").value);
-            var starName = document.getElementById("starName").value;
-            var constellation = document.getElementById("constellation").value;
-
-            if (isNaN(bvValue)) {
-                document.getElementById("result").innerText = "Please enter a valid B-V value.";
+            if (isNaN(bvValue) || isNaN(apparentMag)) {
+                document.getElementById("result").innerText = "Please enter valid B-V and apparent magnitude values.";
                 return;
             }
 
-            // Check if B-V value is between -1 and 6
-            if (bvValue < -1 || bvValue > 6) {
-                document.getElementById("result").innerText = "Invalid B-V value. Please enter a value between -1 and 6.";
-                return;
-            }
+            const temperature = Math.round(4600 * (1 / (0.92 * bvValue + 1.7) + 1 / (0.92 * bvValue + 0.62)));
 
-            // Apply Ballesteros' formula to calculate temperature
-            var temperature = 4600 * (1 / (0.92 * bvValue + 1.7) + 1 / (0.92 * bvValue + 0.62));
+            let closest = starData[0];
+            let minDiff = Math.abs(temperature - closest.temp);
 
-            // Avoid negative temperature and handle edge cases
-            if (temperature <= 0) {
-                document.getElementById("result").innerText = "Invalid temperature result. Please enter a valid B-V value.";
-                return;
-            }
+            starData.forEach(star => {
+                const diff = Math.abs(temperature - star.temp);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = star;
+                }
+            });
 
-            // Round the temperature to the nearest integer and display it
-            temperature = Math.round(temperature);
-            document.getElementById("result").innerText = `Calculated Star Temperature: ${temperature} K`;
+            const absoluteMag = closest.mag;
+            const distanceParsecs = Math.pow(10, (apparentMag - absoluteMag + 5) / 5).toFixed(2);
+            const distanceLightYears = (distanceParsecs * 3.26).toFixed(2);
 
-            // Save calculation to history
-            var historyEntry = { starName, constellation, bvValue, temperature };
+            document.getElementById("result").innerHTML = `
+                <p>Star Name: ${starName}</p>
+                <p>Constellation: ${constellation}</p>
+                <p>Calculated Temperature: ${temperature} K</p>
+                <p>Closest Spectral Type: ${closest.type}</p>
+                <p>Absolute Magnitude: ${absoluteMag}</p>
+                <p>Distance: ${distanceParsecs} parsecs (${distanceLightYears} light-years)</p>
+            `;
+
+            const historyEntry = { starName, constellation, temperature, spectralType: closest.type, absoluteMag, apparentMag, distanceParsecs, distanceLightYears };
             historyData.push(historyEntry);
             updateHistory();
         }
 
         function updateHistory() {
-            var historyList = document.getElementById("historyList");
+            const historyList = document.getElementById("historyList");
             historyList.innerHTML = "";
             historyData.forEach(entry => {
-                var li = document.createElement("li");
-                li.innerText = `Star: ${entry.starName}, Constellation: ${entry.constellation}, B-V: ${entry.bvValue}, Temp: ${entry.temperature} K`;
+                const li = document.createElement("li");
+                li.innerText = `Star: ${entry.starName}, Constellation: ${entry.constellation}, Temp: ${entry.temperature} K, Type: ${entry.spectralType}, Abs Mag: ${entry.absoluteMag}, App Mag: ${entry.apparentMag}, Distance: ${entry.distanceParsecs} parsecs (${entry.distanceLightYears} light-years)`;
                 historyList.appendChild(li);
             });
         }
 
         function downloadHistory() {
-            var csvContent = "Star Name, Constellation, B-V Value, Temperature (K)\n";
+            let csvContent = "Star Name, Constellation, Temperature (K), Spectral Type, Absolute Magnitude, Apparent Magnitude, Distance (parsecs), Distance (light-years)\n";
             historyData.forEach(entry => {
-                csvContent += `${entry.starName}, ${entry.constellation}, ${entry.bvValue}, ${entry.temperature}\n`;
+                csvContent += `${entry.starName}, ${entry.constellation}, ${entry.temperature}, ${entry.spectralType}, ${entry.absoluteMag}, ${entry.apparentMag}, ${entry.distanceParsecs}, ${entry.distanceLightYears}\n`;
             });
 
-            var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-            var link = document.createElement("a");
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "star_temperature_history.csv";
+            link.download = "star_calculations.csv";
             link.click();
         }
 
@@ -424,7 +477,7 @@
 
         // Add event listener to hide definition when clicking anywhere on the page
         document.addEventListener("click", function(event) {
-            if (!event.target.classList.contains("term")) {
+            if (!event.target.classList.contains("term") && !event.target.closest('.definition')) {
                 var definitions = document.querySelectorAll(".definition");
                 definitions.forEach(def => def.classList.remove("active"));
             }
@@ -440,6 +493,5 @@
             }
         }
     </script>
-
 </body>
 </html>
