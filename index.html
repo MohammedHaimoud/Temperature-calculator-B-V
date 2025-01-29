@@ -322,6 +322,14 @@
                 <button onclick="calculateDistanceAndSpectralType()">Calculate</button>
             </div>
 
+<div class="form-group">
+    <label for="fileUpload">Upload Excel File:</label>
+    <input type="file" id="fileUpload" accept=".xlsx">
+</div>
+
+<div class="form-group">
+    <button onclick="processFile()">Process File</button>
+</div>
             <div id="result" class="result"></div>
 
             <div id="history" class="history">
@@ -334,6 +342,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Footer -->
     <footer>
@@ -354,7 +363,9 @@
         <p>&copy; 2025 Mohammed Haimoud. All rights reserved.</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script>
+
         let historyData = [];const starData = [
             {type: 'O5', temp: 54000, mag: -10.0, lum: 846000},
             {type: 'O6', temp: 45000, mag: -8.8, lum: 275000},
@@ -509,7 +520,70 @@
             }
         });
 
-        // Function to toggle the sidebar visibility
+       function processFile() {
+    const fileInput = document.getElementById('fileUpload');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select an Excel file.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+        rows.forEach((row, index) => {
+            if (index === 0) return; // Skip header row
+
+            const [starName, constellation, bvValue, apparentMag] = row;
+            if (!starName || !constellation || isNaN(bvValue) || isNaN(apparentMag)) {
+                alert(`Invalid data in row ${index + 1}. Please check the file.`);
+                return;
+            }
+
+            calculateDistanceAndSpectralTypeFromFile(starName, constellation, parseFloat(bvValue), parseFloat(apparentMag));
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function calculateDistanceAndSpectralTypeFromFile(starName, constellation, bvValue, apparentMag) {
+    const temperature = Math.round(4600 * (1 / (0.92 * bvValue + 1.7) + 1 / (0.92 * bvValue + 0.62)));
+
+    let closest = starData[0];
+    let minDiff = Math.abs(temperature - closest.temp);
+
+    starData.forEach(star => {
+        const diff = Math.abs(temperature - star.temp);
+        if (diff < minDiff) {
+            minDiff = diff;
+            closest = star;
+        }
+    });
+
+    const absoluteMag = closest.mag;
+    const distanceParsecs = Math.pow(10, (apparentMag - absoluteMag + 5) / 5).toFixed(2);
+    const distanceLightYears = (distanceParsecs * 3.26).toFixed(2);
+
+    document.getElementById("result").innerHTML += `
+        <p>Star Name: ${starName}</p>
+        <p>Constellation: ${constellation}</p>
+        <p>Calculated Temperature: ${temperature} K</p>
+        <p>Closest Spectral Type: ${closest.type}</p>
+        <p>Absolute Magnitude: ${absoluteMag}</p>
+        <p>Distance: ${distanceParsecs} parsecs (${distanceLightYears} light-years)</p>
+        <hr>
+    `;
+
+    const historyEntry = { starName, constellation, bvValue, temperature, spectralType: closest.type, absoluteMag, apparentMag, distanceParsecs, distanceLightYears };
+    historyData.push(historyEntry);
+    updateHistory();
+}
+ // Function to toggle the sidebar visibility
         function toggleSidebar() {
             var sidebar = document.getElementById("sidebar");
             if (sidebar.style.display === "none" || sidebar.style.display === "") {
