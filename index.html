@@ -17,8 +17,9 @@
             flex-direction: column;
             height: 100vh;
             justify-content: space-between;
-            background: url('https://apod.nasa.gov/apod/image/2201/NGC2244_Hubble_960.jpg') no-repeat center center fixed;
             background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         /* Main Content Area */
@@ -28,7 +29,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.7); /* Add semi-transparent background */
         }
 
         .container {
@@ -121,28 +122,30 @@
 
         /* Sidebar Styles */
         .sidebar {
-            display: none;
-            flex-direction: column;
             position: fixed;
-            top: 0;
             left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .term {
-            padding: 10px;
-            color: #fff;
-            cursor: pointer;
-            border-bottom: 1px solid #333;
-        }
-
-        .term:hover {
+            top: 50%;
+            transform: translateY(-50%);
             background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            display: none; /* Hide sidebar by default */
+            flex-direction: column;
+        }
+
+        .sidebar .term {
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .sidebar .term:hover {
+            background-color: #ffcc00;
+            color: black;
         }
 
         /* Definition Pop-up Styles */
@@ -152,33 +155,45 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            z-index: 1001;
-            max-width: 400px;
-            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            width: 60%;
+            max-width: 500px;
+            text-align: center;
         }
 
         .definition.active {
             display: block;
         }
 
-        /* Star Button Styles */
+        /* Menu Button Styles */
         .menu-button {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            background: none;
+            top: 20px;
+            left: 20px;
+            background-color: #ffcc00;
+            color: black;
             border: none;
-            color: #ffcc00;
-            font-size: 24px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease;
         }
 
         .menu-button:hover {
-            color: #ffa500;
+            background-color: #ffa500;
+        }
+
+        .menu-button i {
+            font-size: 24px;
         }
 
         /* Footer Styles */
@@ -336,12 +351,11 @@
                 <a href="https://www.researchgate.net/profile/Mohammed-Haimoud" target="_blank"><i class="fab fa-researchgate"></i></a>
             </div>
         </section>
-        <p>© 2025 Mohammed Haimoud. All rights reserved.</p>
+        <p>&copy; 2025 Mohammed Haimoud. All rights reserved.</p>
     </footer>
 
     <script>
-        let historyData = [];
-        const starData = [
+        let historyData = [];const starData = [
             {type: 'O5', temp: 54000, mag: -10.0, lum: 846000},
             {type: 'O6', temp: 45000, mag: -8.8, lum: 275000},
             {type: 'O7', temp: 43300, mag: -8.6, lum: 220000},
@@ -399,6 +413,15 @@
             {type: 'T8', temp: 800, mag: '*', lum: 0.0000055}
         ];
 
+
+        // Fetch NASA APOD API to set background
+        fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
+            .then(response => response.json())
+            .then(data => {
+                document.body.style.backgroundImage = `url(${data.hdurl})`; // Set HD background image
+            })
+            .catch(error => console.error('Error fetching APOD:', error));
+
         function calculateDistanceAndSpectralType() {
             const bvValue = parseFloat(document.getElementById("bvInput").value);
             const apparentMag = parseFloat(document.getElementById("apparentMag").value);
@@ -436,11 +459,11 @@
                 <p>Distance: ${distanceParsecs} parsecs (${distanceLightYears} light-years)</p>
             `;
 
-            const historyEntry = { starName, constellation, temperature, spectralType: closest.type, absoluteMag, apparentMag, distanceParsecs, distanceLightYears };
-            historyData.push(historyEntry);
-            updateHistory();
-        }
-
+           // Include B-V value in the history entry
+    const historyEntry = { starName, constellation, bvValue, temperature, spectralType: closest.type, absoluteMag, apparentMag, distanceParsecs, distanceLightYears };
+    historyData.push(historyEntry);
+    updateHistory();
+}
         function updateHistory() {
             const historyList = document.getElementById("historyList");
             historyList.innerHTML = "";
@@ -451,18 +474,21 @@
             });
         }
 
-        function downloadHistory() {
-            let csvContent = "Star Name, Constellation, Temperature (K), Spectral Type, Absolute Magnitude, Apparent Magnitude, Distance (parsecs), Distance (light-years)\n";
-            historyData.forEach(entry => {
-                csvContent += `${entry.starName}, ${entry.constellation}, ${entry.temperature}, ${entry.spectralType}, ${entry.absoluteMag}, ${entry.apparentMag}, ${entry.distanceParsecs}, ${entry.distanceLightYears}\n`;
-            });
+       function downloadHistory() {
+    // Update the CSV header to include B-V Value
+    let csvContent = "Star Name, Constellation, B-V Value, Temperature (K), Spectral Type, Absolute Magnitude, Apparent Magnitude, Distance (parsecs), Distance (light-years)\n";
+    
+    // Include B-V value in each row of data
+    historyData.forEach(entry => {
+        csvContent += `${entry.starName}, ${entry.constellation}, ${entry.bvValue}, ${entry.temperature}, ${entry.spectralType}, ${entry.absoluteMag}, ${entry.apparentMag}, ${entry.distanceParsecs}, ${entry.distanceLightYears}\n`;
+    });
 
-            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "star_calculations.csv";
-            link.click();
-        }
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "star_calculations.csv";
+    link.click();
+}
 
         function showDefinition(term) {
             var definitions = document.querySelectorAll(".definition");
@@ -477,7 +503,7 @@
 
         // Add event listener to hide definition when clicking anywhere on the page
         document.addEventListener("click", function(event) {
-            if (!event.target.classList.contains("term") && !event.target.closest('.definition')) {
+            if (!event.target.classList.contains("term")) {
                 var definitions = document.querySelectorAll(".definition");
                 definitions.forEach(def => def.classList.remove("active"));
             }
@@ -493,5 +519,6 @@
             }
         }
     </script>
+
 </body>
 </html>
